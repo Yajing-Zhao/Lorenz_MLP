@@ -66,19 +66,21 @@ class MSRELoss(nn.Module):
     def __init__(self):
         super().__init__()
         self.eps = 1e-7
-        self.weight = torch.Tensor([1/2,1/3,1]).cuda()
+        self.weight = torch.Tensor([1/3,1,1/2]).cuda()
     def forward(self, input, target, size_average=True):
         return torch.mean(self.weight[None,:] * (input - target)**2) if size_average else torch.sum(self.weight[None,:] * (input - target)**2)
 # define the model
 model = MLP().cuda()
 # difine the loss function
 # using MSELOSS: 
-#loss_fn = nn.MSELoss(reduction='sum').cuda()
+loss_fn = nn.MSELoss(reduction='sum').cuda()
 # using mean squared relative error loss function(MSRELoss)
-loss_fn = MSRELoss().cuda()
+#loss_fn = MSRELoss().cuda()
 
 # define the hyperparameters
-learning_rate = 1e-5
+#learning_rate = 1e-5
+learning_rate = 1e-3
+
 EPOCH = 100
 
 # define the optimizer
@@ -170,13 +172,13 @@ x_axis = np.arange(1,EPOCH+1)
 plt.plot(x_axis, error_all, 'r--', x_axis, error_sigma, 'bs', x_axis, error_rho, 'g^', x_axis, error_beta, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file1 = 'all_epoch'
+my_results_file1 = 'all_epoch_mse_lr2'
 plt.savefig(os.path.join(my_results_path, my_results_file1))
 
 x_axis2 = np.arange(1,total_samples + 1)
 plt.plot(x_axis2, error_all_lastep, 'r--', x_axis2, error_sigma_lastep, 'bs', x_axis2, error_rho_lastep, 'g^', x_axis2, error_beta_lastep, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file2 = 'last_epoch'
+my_results_file2 = 'last_epoch_mse_lr2'
 plt.savefig(os.path.join(my_results_path, my_results_file2))
 
