@@ -79,7 +79,7 @@ loss_fn = MSRELoss().cuda()
 
 # define the hyperparameters
 learning_rate = 1e-5
-EPOCH = 5
+EPOCH = 100
 
 # define the optimizer
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
@@ -167,17 +167,13 @@ for t in range(EPOCH):
     error_beta.append(mean_error_beta)
     
 x_axis = np.arange(1,EPOCH+1)
-print(x_axis)
-print(error_all)
 plt.plot(x_axis, error_all, 'r--', x_axis, error_sigma, 'bs', x_axis, error_rho, 'g^', x_axis, error_beta, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
 my_results_file1 = 'all_epoch'
 plt.savefig(os.path.join(my_results_path, my_results_file1))
 
-print(error_all_lastep)
 x_axis2 = np.arange(1,total_samples + 1)
-print(x_axis2)
 plt.plot(x_axis2, error_all_lastep, 'r--', x_axis2, error_sigma_lastep, 'bs', x_axis2, error_rho_lastep, 'g^', x_axis2, error_beta_lastep, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
