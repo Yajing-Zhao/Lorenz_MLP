@@ -93,6 +93,14 @@ error_sigma_lastep = []
 error_rho_lastep = []
 error_beta_lastep = []
 
+rela_error_all = []
+rela_error_sigma = []
+rela_error_rho = []
+rela_error_beta = []
+rela_error_all_lastep = []
+rela_error_sigma_lastep = []
+rela_error_rho_lastep = []
+rela_error_beta_lastep = []
 
 for t in range(EPOCH):
     #training
@@ -126,6 +134,10 @@ for t in range(EPOCH):
     total_error_sigma = 0
     total_error_rho = 0
     total_error_beta = 0
+    total_rela_error_allpara = 0
+    total_rela_error_sigma = 0
+    total_rela_error_rho = 0
+    total_rela_error_beta = 0
     for i in range(batch_num):
         start = i*batch_size
         end = min(total_samples, (i+1)*batch_size)
@@ -145,15 +157,32 @@ for t in range(EPOCH):
             preds[0,0], preds[0,1], preds[0,2]))
         a = targets - preds
         error = torch.abs(a)
+        rela_error = torch.abs(a/targets)
+        print(error)
+        print(targets)
+        print(rela_error)
+
+
+
         if t == EPOCH - 1:
             error_sigma_lastep.extend(error[:,0].tolist())
             error_rho_lastep.extend(error[:,1].tolist())
             error_beta_lastep.extend(error[:,2].tolist())
             error_all_lastep.extend((error[:,0]+error[:,1]+error[:,2]).tolist())
 
+            rela_error_sigma_lastep.extend(rela_error[:,0].tolist())
+            rela_error_rho_lastep.extend(rela_error[:,1].tolist())
+            rela_error_beta_lastep.extend(rela_error[:,2].tolist())
+            rela_error_all_lastep.extend((rela_error[:,0]+rela_error[:,1]+rela_error[:,2]).tolist())
+
         total_error_sigma += (torch.sum(error[:,0])).item()
         total_error_rho += (torch.sum(error[:,1])).item()
         total_error_beta += (torch.sum(error[:,2])).item()
+
+        total_rela_error_sigma += (torch.sum(rela_error[:,0])).item()
+        total_rela_error_rho += (torch.sum(rela_error[:,1])).item()
+        total_rela_error_beta += (torch.sum(rela_error[:,2])).item()
+    total_rela_error_allpara = total_rela_error_sigma + total_rela_error_rho + total_rela_error_beta
     total_error_allpara = total_error_sigma + total_error_rho + total_error_beta
 
     #visualize the result:
@@ -166,6 +195,15 @@ for t in range(EPOCH):
     error_rho.append(mean_error_rho)
     error_beta.append(mean_error_beta)
     
+    #visualize the result relative error:
+    mean_rela_error_sigma = total_rela_error_sigma / total_samples
+    mean_rela_error_rho = total_rela_error_rho / total_samples
+    mean_rela_error_beta = total_rela_error_beta / total_samples
+    mean_rela_error_allpara = total_rela_error_allpara / total_samples
+    rela_error_all.append(mean_rela_error_allpara)
+    rela_error_sigma.append(mean_rela_error_sigma)
+    rela_error_rho.append(mean_rela_error_rho)
+    rela_error_beta.append(mean_rela_error_beta)
 x_axis = np.arange(1,EPOCH+1)
 plt.plot(x_axis, error_all, 'r--', x_axis, error_sigma, 'bs', x_axis, error_rho, 'g^', x_axis, error_beta, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
@@ -179,4 +217,20 @@ label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
 my_results_file2 = 'last_epoch_mse_par4'
 plt.savefig(os.path.join(my_results_path, my_results_file2))
+
+x_axis3 = np.arange(1,EPOCH+1)
+plt.plot(x_axis3, rela_error_all, 'r--', x_axis3, rela_error_sigma, 'bs', x_axis3, rela_error_rho, 'g^', x_axis3, rela_error_beta, 'y*')
+label = ['all', 'sigma', 'rho', 'beta']
+plt.legend(label, loc='upper right')
+my_results_file2 = 'rela_all_epoch_mse_par4'
+plt.savefig(os.path.join(my_results_path, my_results_file2))
+
+x_axis4 = np.arange(1,total_samples + 1)
+plt.plot(x_axis4, rela_error_all_lastep, 'r--', x_axis4, rela_error_sigma_lastep, 'bs', x_axis4, rela_error_rho_lastep, 'g^', x_axis4, rela_error_beta_lastep, 'y*')
+label = ['all', 'sigma', 'rho', 'beta']
+plt.legend(label, loc='upper right')
+my_results_file3 = 'rela_last_epoch_mse_par4'
+plt.savefig(os.path.join(my_results_path, my_results_file3))
+
+# Plot the relative error
 
