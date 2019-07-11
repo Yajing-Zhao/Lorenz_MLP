@@ -40,8 +40,37 @@ def dataset(total_samples):
 
     return data.cuda(), targets.cuda()
 
+def test_dataset(total_samples):
+    def f(state,t):
+        x, y, z = state
+        sigma, rho, beta = para
+        return sigma * (y-x), x*(rho-z)-y, x*y-beta*z
+
+    data = []
+    targets = []
+    for i in range(total_samples):
+        para = [np.random.uniform(0,20), np.random.uniform(30,40), np.random.uniform(0,10)]
+        t_seq = np.arange(0, 40, 0.01)
+        state0 = [1.0, 1.0, 1.0]
+        states = odeint(f, state0, t_seq)
+        """
+        fig1 = plt.figure()
+        ax =fig1.gca(projection = '3d')
+        ax.plot(states[:,0], states[:,1], states[:,2])
+        my_file = 'training'+str(i)
+        plt.savefig(os.path.join(my_path, my_file))
+        """
+     #   print(states.shape())
+        data.append(states)
+        targets.append(para)
+
+    data = Variable(torch.from_numpy(np.array(data)).float()).view(total_samples, -1)
+    targets = Variable(torch.from_numpy(np.array(targets)).float()).view(total_samples, -1)
+
+    return data.cuda(), targets.cuda()
+
 train_inputs, train_targets = dataset(total_samples)
-test_inputs, test_targets = dataset(total_samples)
+test_inputs, test_targets = test_dataset(total_samples)
 batch_size = 8
 
 # define the neural network
@@ -64,7 +93,7 @@ class MSRELoss(nn.Module):
     def __init__(self):
         super().__init__()
         self.eps = 1e-7
-        self.weight = torch.Tensor([.1,1,.1]).cuda()
+        self.weight = torch.Tensor([1,1/2,1]).cuda()
     def forward(self, input, target, size_average=True):
         return torch.mean(self.weight[None,:] * (input - target)**2) if size_average else torch.sum(self.weight[None,:] * (input - target)**2)
 # define the model
@@ -158,9 +187,6 @@ for t in range(EPOCH):
         a = targets - preds
         error = torch.abs(a)
         rela_error = torch.abs(a/targets)
-        print(error)
-        print(targets)
-        print(rela_error)
 
 
 
@@ -208,28 +234,28 @@ x_axis = np.arange(1,EPOCH+1)
 plt.plot(x_axis, error_all, 'r--', x_axis, error_sigma, 'bs', x_axis, error_rho, 'g^', x_axis, error_beta, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file1 = 'all_epoch_mse_par4'
+my_results_file1 = 'rho_all_epoch_msre_par6'
 plt.savefig(os.path.join(my_results_path, my_results_file1))
 
 x_axis2 = np.arange(1,total_samples + 1)
 plt.plot(x_axis2, error_all_lastep, 'r--', x_axis2, error_sigma_lastep, 'bs', x_axis2, error_rho_lastep, 'g^', x_axis2, error_beta_lastep, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file2 = 'last_epoch_mse_par4'
+my_results_file2 = 'rho_last_epoch_msre_par6'
 plt.savefig(os.path.join(my_results_path, my_results_file2))
 
 x_axis3 = np.arange(1,EPOCH+1)
 plt.plot(x_axis3, rela_error_all, 'r--', x_axis3, rela_error_sigma, 'bs', x_axis3, rela_error_rho, 'g^', x_axis3, rela_error_beta, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file2 = 'rela_all_epoch_mse_par4'
+my_results_file2 = 'rho_rela_all_epoch_msre_par6'
 plt.savefig(os.path.join(my_results_path, my_results_file2))
 
 x_axis4 = np.arange(1,total_samples + 1)
 plt.plot(x_axis4, rela_error_all_lastep, 'r--', x_axis4, rela_error_sigma_lastep, 'bs', x_axis4, rela_error_rho_lastep, 'g^', x_axis4, rela_error_beta_lastep, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file3 = 'rela_last_epoch_mse_par4'
+my_results_file3 = 'rho_rela_last_epoch_msre_par6'
 plt.savefig(os.path.join(my_results_path, my_results_file3))
 
 # Plot the relative error
