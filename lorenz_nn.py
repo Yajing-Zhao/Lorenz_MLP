@@ -248,15 +248,15 @@ x_axis3 = np.arange(1,EPOCH+1)
 plt.plot(x_axis3, rela_error_all, 'r--', x_axis3, rela_error_sigma, 'bs', x_axis3, rela_error_rho, 'g^', x_axis3, rela_error_beta, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file2 = 'rho_rela_all_epoch_mse_par6'
-plt.savefig(os.path.join(my_results_path, my_results_file2))
+my_results_file3 = 'rho_rela_all_epoch_mse_par6'
+plt.savefig(os.path.join(my_results_path, my_results_file3))
 
 x_axis4 = np.arange(1,total_samples + 1)
 plt.plot(x_axis4, rela_error_all_lastep, 'r--', x_axis4, rela_error_sigma_lastep, 'bs', x_axis4, rela_error_rho_lastep, 'g^', x_axis4, rela_error_beta_lastep, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file3 = 'rho_rela_last_epoch_mse_par6'
-plt.savefig(os.path.join(my_results_path, my_results_file3))
+my_results_file4 = 'rho_rela_last_epoch_mse_par6'
+plt.savefig(os.path.join(my_results_path, my_results_file4))
 
 # Plot the relative error
 
