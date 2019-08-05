@@ -8,7 +8,8 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 my_path = '/home/peiguo/Lorenz_MLP/training_fig'
-my_results_path = '/home/peiguo/Lorenz_MLP/results' 
+my_results_path_rela = '/home/peiguo/Lorenz_MLP/results/rela_error' 
+my_results_path_abso = '/home/peiguo/Lorenz_MLP/results/abso_error' 
 total_samples = 5000
 
 def dataset(total_samples):
@@ -49,7 +50,7 @@ def test_dataset(total_samples):
     data = []
     targets = []
     for i in range(total_samples):
-        para = [np.random.uniform(0,20), np.random.uniform(30,40), np.random.uniform(0,10)]
+        para = [np.random.uniform(0,20), np.random.uniform(10,30), np.random.uniform(0,10)]
         t_seq = np.arange(0, 40, 0.01)
         state0 = [1.0, 1.0, 1.0]
         states = odeint(f, state0, t_seq)
@@ -93,16 +94,16 @@ class MSRELoss(nn.Module):
     def __init__(self):
         super().__init__()
         self.eps = 1e-7
-        self.weight = torch.Tensor([1,1/2,1]).cuda()
+        self.weight = torch.Tensor([1/2,1,1/2]).cuda()
     def forward(self, input, target, size_average=True):
         return torch.mean(self.weight[None,:] * (input - target)**2) if size_average else torch.sum(self.weight[None,:] * (input - target)**2)
 # define the model
 model = MLP().cuda()
 # difine the loss function
 # using MSELOSS: 
-loss_fn = nn.MSELoss(reduction='sum').cuda()
+#loss_fn = nn.MSELoss(reduction='sum').cuda()
 # using mean squared relative error loss function(MSRELoss)
-#loss_fn = MSRELoss().cuda()
+loss_fn = MSRELoss().cuda()
 
 # define the hyperparameters
 learning_rate = 1e-5
@@ -230,33 +231,48 @@ for t in range(EPOCH):
     rela_error_sigma.append(mean_rela_error_sigma)
     rela_error_rho.append(mean_rela_error_rho)
     rela_error_beta.append(mean_rela_error_beta)
-x_axis = np.arange(1,EPOCH+1)
+
+    mean_rela_error_allpara = total_rela_error_allpara / total_samples
+    rela_error_all.append(mean_rela_error_allpara)
+    rela_error_sigma.append(mean_rela_error_sigma)
+    rela_error_rho.append(mean_rela_error_rho)
+    rela_error_beta.append(mean_rela_error_beta)
+
+
+x_axis0 = np.arange(1,total_samples + 1)
+plt.plot(x_axis0, targets, 'bs', x_axis0, predicts, 'g^')
+label = [ 'target', 'predict']
+plt.legend(label, loc='upper right')
+my_results_file0 = 'rho_last_epoch_par1'
+plt.savefig(os.path.join(my_results_path_abso, my_results_file2))
+
+x_axis1 = np.arange(1,EPOCH+1)
 plt.plot(x_axis, error_all, 'r--', x_axis, error_sigma, 'bs', x_axis, error_rho, 'g^', x_axis, error_beta, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file1 = 'rho_all_epoch_mse_par6'
-plt.savefig(os.path.join(my_results_path, my_results_file1))
+my_results_file1 = 'rho_all_epoch_par1'
+plt.savefig(os.path.join(my_results_path_abso, my_results_file1))
 
 x_axis2 = np.arange(1,total_samples + 1)
 plt.plot(x_axis2, error_all_lastep, 'r--', x_axis2, error_sigma_lastep, 'bs', x_axis2, error_rho_lastep, 'g^', x_axis2, error_beta_lastep, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file2 = 'rho_last_epoch_mse_par6'
-plt.savefig(os.path.join(my_results_path, my_results_file2))
+my_results_file2 = 'rho_last_epoch_par1'
+plt.savefig(os.path.join(my_results_path_abso, my_results_file2))
 
 x_axis3 = np.arange(1,EPOCH+1)
 plt.plot(x_axis3, rela_error_all, 'r--', x_axis3, rela_error_sigma, 'bs', x_axis3, rela_error_rho, 'g^', x_axis3, rela_error_beta, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file3 = 'rho_rela_all_epoch_mse_par6'
-plt.savefig(os.path.join(my_results_path, my_results_file3))
+my_results_file3 = 'rho_rela_all_epoch_par1'
+plt.savefig(os.path.join(my_results_path_rela, my_results_file3))
 
 x_axis4 = np.arange(1,total_samples + 1)
 plt.plot(x_axis4, rela_error_all_lastep, 'r--', x_axis4, rela_error_sigma_lastep, 'bs', x_axis4, rela_error_rho_lastep, 'g^', x_axis4, rela_error_beta_lastep, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file4 = 'rho_rela_last_epoch_mse_par6'
-plt.savefig(os.path.join(my_results_path, my_results_file4))
+my_results_file4 = 'rho_rela_last_epoch_par1'
+plt.savefig(os.path.join(my_results_path_rela, my_results_file4))
 
 # Plot the relative error
 
