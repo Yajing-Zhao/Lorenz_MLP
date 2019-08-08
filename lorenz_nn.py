@@ -10,7 +10,7 @@ from torch.autograd import Variable
 my_path = '/home/peiguo/Lorenz_MLP/training_fig'
 my_results_path_rela = '/home/peiguo/Lorenz_MLP/results/rela_error' 
 my_results_path_abso = '/home/peiguo/Lorenz_MLP/results/abso_error' 
-total_samples = 5000
+total_samples = 10
 
 def dataset(total_samples):
     def f(state,t):
@@ -109,7 +109,7 @@ loss_fn = MSRELoss().cuda()
 learning_rate = 1e-5
 #learning_rate = 1e-3
 
-EPOCH = 100
+EPOCH = 10
 
 # define the optimizer
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
@@ -132,20 +132,22 @@ rela_error_sigma_lastep = []
 rela_error_rho_lastep = []
 rela_error_beta_lastep = []
 
+
 for t in range(EPOCH):
     #training
     batch_num = int(np.ceil(total_samples // batch_size))
+    print(batch_num)
     shuffled = np.arange(total_samples)
     np.random.shuffle(shuffled)
     total_loss = 0
     all_data = 0
-    for i in range(batch_num):
+    for i in range(batch_num+1):
         start = i*batch_size
         end = min(total_samples, (i+1)*batch_size)
         inputs = train_inputs[shuffled[start:end]]
-        targets = train_targets[shuffled[start:end]]
-        preds = model(inputs)
-        loss = loss_fn(preds, targets)
+        targets_train = train_targets[shuffled[start:end]]
+        preds_train = model(inputs)
+        loss = loss_fn(preds_train, targets_train)
         total_loss += loss.item() * (end - start)
         all_data += end - start
 
@@ -168,7 +170,10 @@ for t in range(EPOCH):
     total_rela_error_sigma = 0
     total_rela_error_rho = 0
     total_rela_error_beta = 0
-    for i in range(batch_num):
+    target_rho = []
+    pred_rho = []
+
+    for i in range(batch_num+1):
         start = i*batch_size
         end = min(total_samples, (i+1)*batch_size)
         inputs = test_inputs[start:end]
@@ -186,12 +191,16 @@ for t in range(EPOCH):
             targets[0,0], targets[0,1], targets[0,2], 
             preds[0,0], preds[0,1], preds[0,2]))
         a = targets - preds
+        print(a)
         error = torch.abs(a)
+        print(error)
         rela_error = torch.abs(a/targets)
-
+        print(rela_error)
 
 
         if t == EPOCH - 1:
+            target_rho.extend(targets[:,1])
+            pred_rho.extend(preds[:,1])
             error_sigma_lastep.extend(error[:,0].tolist())
             error_rho_lastep.extend(error[:,1].tolist())
             error_beta_lastep.extend(error[:,2].tolist())
@@ -232,46 +241,41 @@ for t in range(EPOCH):
     rela_error_rho.append(mean_rela_error_rho)
     rela_error_beta.append(mean_rela_error_beta)
 
-    mean_rela_error_allpara = total_rela_error_allpara / total_samples
-    rela_error_all.append(mean_rela_error_allpara)
-    rela_error_sigma.append(mean_rela_error_sigma)
-    rela_error_rho.append(mean_rela_error_rho)
-    rela_error_beta.append(mean_rela_error_beta)
 
 
 x_axis0 = np.arange(1,total_samples + 1)
-plt.plot(x_axis0, targets, 'bs', x_axis0, predicts, 'g^')
+plt.plot(x_axis0, target_rho, 'bs', x_axis0, pred_rho, 'g^')
 label = [ 'target', 'predict']
 plt.legend(label, loc='upper right')
 my_results_file0 = 'rho_last_epoch_par1'
-plt.savefig(os.path.join(my_results_path_abso, my_results_file2))
+plt.savefig(os.path.join(my_results_path_abso, my_results_file0))
 
 x_axis1 = np.arange(1,EPOCH+1)
-plt.plot(x_axis, error_all, 'r--', x_axis, error_sigma, 'bs', x_axis, error_rho, 'g^', x_axis, error_beta, 'y*')
+plt.plot(x_axis1, error_all, 'r--', x_axis1, error_sigma, 'bs', x_axis1, error_rho, 'g^', x_axis1, error_beta, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file1 = 'rho_all_epoch_par1'
+my_results_file1 = 'all_epoch_par1'
 plt.savefig(os.path.join(my_results_path_abso, my_results_file1))
 
 x_axis2 = np.arange(1,total_samples + 1)
 plt.plot(x_axis2, error_all_lastep, 'r--', x_axis2, error_sigma_lastep, 'bs', x_axis2, error_rho_lastep, 'g^', x_axis2, error_beta_lastep, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file2 = 'rho_last_epoch_par1'
+my_results_file2 = 'last_epoch_par1'
 plt.savefig(os.path.join(my_results_path_abso, my_results_file2))
 
 x_axis3 = np.arange(1,EPOCH+1)
 plt.plot(x_axis3, rela_error_all, 'r--', x_axis3, rela_error_sigma, 'bs', x_axis3, rela_error_rho, 'g^', x_axis3, rela_error_beta, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file3 = 'rho_rela_all_epoch_par1'
+my_results_file3 = 'rela_all_epoch_par1'
 plt.savefig(os.path.join(my_results_path_rela, my_results_file3))
 
 x_axis4 = np.arange(1,total_samples + 1)
 plt.plot(x_axis4, rela_error_all_lastep, 'r--', x_axis4, rela_error_sigma_lastep, 'bs', x_axis4, rela_error_rho_lastep, 'g^', x_axis4, rela_error_beta_lastep, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file4 = 'rho_rela_last_epoch_par1'
+my_results_file4 = 'rela_last_epoch_par1'
 plt.savefig(os.path.join(my_results_path_rela, my_results_file4))
 
 # Plot the relative error
