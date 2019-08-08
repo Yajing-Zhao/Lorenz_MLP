@@ -10,7 +10,7 @@ from torch.autograd import Variable
 my_path = '/home/peiguo/Lorenz_MLP/training_fig'
 my_results_path_rela = '/home/peiguo/Lorenz_MLP/results/rela_error' 
 my_results_path_abso = '/home/peiguo/Lorenz_MLP/results/abso_error' 
-total_samples = 10
+total_samples = 20
 
 def dataset(total_samples):
     def f(state,t):
