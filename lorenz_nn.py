@@ -263,12 +263,6 @@ plt.legend(label, loc='upper right')
 my_results_file1 = 'all_epoch_par1'
 plt.savefig(os.path.join(my_results_path_abso, my_results_file1))
 
-x_axis2 = np.arange(1,total_samples + 1)
-plt.plot(x_axis2, error_all_lastep, 'r--', x_axis2, error_sigma_lastep, 'bs', x_axis2, error_rho_lastep, 'g^', x_axis2, error_beta_lastep, 'y*')
-label = ['all', 'sigma', 'rho', 'beta']
-plt.legend(label, loc='upper right')
-my_results_file2 = 'last_epoch_par1'
-plt.savefig(os.path.join(my_results_path_abso, my_results_file2))
 
 x_axis3 = np.arange(1,EPOCH+1)
 plt.plot(x_axis3, rela_error_all, 'r--', x_axis3, rela_error_sigma, 'bs', x_axis3, rela_error_rho, 'g^', x_axis3, rela_error_beta, 'y*')
@@ -276,6 +270,13 @@ label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
 my_results_file3 = 'rela_all_epoch_par1'
 plt.savefig(os.path.join(my_results_path_rela, my_results_file3))
+"""
+x_axis2 = np.arange(1,total_samples + 1)
+plt.plot(x_axis2, error_all_lastep, 'r--', x_axis2, error_sigma_lastep, 'bs', x_axis2, error_rho_lastep, 'g^', x_axis2, error_beta_lastep, 'y*')
+label = ['all', 'sigma', 'rho', 'beta']
+plt.legend(label, loc='upper right')
+my_results_file2 = 'last_epoch_par1'
+plt.savefig(os.path.join(my_results_path_abso, my_results_file2))
 
 x_axis4 = np.arange(1,total_samples + 1)
 plt.plot(x_axis4, rela_error_all_lastep, 'r--', x_axis4, rela_error_sigma_lastep, 'bs', x_axis4, rela_error_rho_lastep, 'g^', x_axis4, rela_error_beta_lastep, 'y*')
@@ -283,6 +284,6 @@ label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
 my_results_file4 = 'rela_last_epoch_par1'
 plt.savefig(os.path.join(my_results_path_rela, my_results_file4))
-
+"""
 # Plot the relative error
 
