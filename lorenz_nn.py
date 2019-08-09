@@ -10,7 +10,7 @@ from torch.autograd import Variable
 my_path = '/home/peiguo/Lorenz_MLP/training_fig'
 my_results_path_rela = '/home/peiguo/Lorenz_MLP/results/rela_error' 
 my_results_path_abso = '/home/peiguo/Lorenz_MLP/results/abso_error' 
-total_samples = 5000
+total_samples = 50
 
 def dataset(total_samples):
     def f(state,t):
@@ -109,7 +109,7 @@ loss_fn = MSRELoss().cuda()
 learning_rate = 1e-5
 #learning_rate = 1e-3
 
-EPOCH = 100
+EPOCH = 10
 
 # define the optimizer
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
@@ -191,12 +191,8 @@ for t in range(EPOCH):
             targets[0,0], targets[0,1], targets[0,2], 
             preds[0,0], preds[0,1], preds[0,2]))
         a = targets - preds
-        print(a)
         error = torch.abs(a)
-        print(error)
         rela_error = torch.abs(a/targets)
-        print(rela_error)
-
 
         if t == EPOCH - 1:
             target_rho.extend(targets[:,1])
@@ -230,7 +226,7 @@ for t in range(EPOCH):
     error_sigma.append(mean_error_sigma)
     error_rho.append(mean_error_rho)
     error_beta.append(mean_error_beta)
-    
+    print(mean_error_sigma)
     #visualize the result relative error:
     mean_rela_error_sigma = total_rela_error_sigma / total_samples
     mean_rela_error_rho = total_rela_error_rho / total_samples
@@ -242,7 +238,10 @@ for t in range(EPOCH):
     rela_error_beta.append(mean_rela_error_beta)
 
 
-
+print(rela_error_all)
+print(rela_error_sigma)
+print(rela_error_rho)
+print(rela_error_beta)
 x_axis0 = np.arange(1,total_samples + 1)
 plt.plot(x_axis0, target_rho, 'bs', x_axis0, pred_rho, 'g^')
 label = [ 'target', 'predict']
