@@ -10,7 +10,7 @@ from torch.autograd import Variable
 my_path = '/home/peiguo/Lorenz_MLP/training_fig'
 my_results_path_rela = '/home/peiguo/Lorenz_MLP/results/rela_error' 
 my_results_path_abso = '/home/peiguo/Lorenz_MLP/results/abso_error' 
-total_samples = 60
+total_samples = 5000
 
 def dataset(total_samples):
     def f(state,t):
@@ -109,7 +109,7 @@ loss_fn = MSRELoss().cuda()
 learning_rate = 1e-5
 #learning_rate = 1e-3
 
-EPOCH = 10
+EPOCH = 100
 
 # define the optimizer
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
