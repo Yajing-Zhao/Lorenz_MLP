@@ -239,6 +239,7 @@ for t in range(EPOCH):
 
 
 print(error_all)
+print(error_sigma)
 """
 print(rela_error_sigma)
 print(rela_error_rho)
@@ -256,9 +257,6 @@ x_axis1 = np.arange(1,EPOCH+1)
 print(x_axis1)
 #plt.plot(x_axis1, error_all, 'r--', x_axis1, error_sigma, 'bs', x_axis1, error_rho, 'g^', x_axis1, error_beta, 'y*')
 plt.plot(x_axis1, error_all, 'r--', x_axis1, error_sigma, 'bs')
-plt.plot(x_axis1, error_sigma, 'r--')
-plt.plot(x_axis1, error_rho, 'r--')
-plt.plot(x_axis1, error_beta, 'r--')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
 my_results_file1 = 'all_epoch_par1'
