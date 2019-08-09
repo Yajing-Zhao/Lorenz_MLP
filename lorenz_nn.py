@@ -238,24 +238,29 @@ for t in range(EPOCH):
     rela_error_beta.append(mean_rela_error_beta)
 
 
-print(rela_error_all)
+print(error_all)
+"""
 print(rela_error_sigma)
 print(rela_error_rho)
 print(rela_error_beta)
+"""
+"""
 x_axis0 = np.arange(1,total_samples + 1)
 plt.plot(x_axis0, target_rho, 'bs', x_axis0, pred_rho, 'g^')
 label = [ 'target', 'predict']
 plt.legend(label, loc='upper right')
 my_results_file0 = 'rho_last_epoch_par1'
 plt.savefig(os.path.join(my_results_path_abso, my_results_file0))
-
+"""
 x_axis1 = np.arange(1,EPOCH+1)
-plt.plot(x_axis1, error_all, 'r--', x_axis1, error_sigma, 'bs', x_axis1, error_rho, 'g^', x_axis1, error_beta, 'y*')
+print(x_axis1)
+#plt.plot(x_axis1, error_all, 'r--', x_axis1, error_sigma, 'bs', x_axis1, error_rho, 'g^', x_axis1, error_beta, 'y*')
+plt.plot(x_axis1, error_all, 'r--')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
 my_results_file1 = 'all_epoch_par1'
 plt.savefig(os.path.join(my_results_path_abso, my_results_file1))
-
+"""
 x_axis2 = np.arange(1,total_samples + 1)
 plt.plot(x_axis2, error_all_lastep, 'r--', x_axis2, error_sigma_lastep, 'bs', x_axis2, error_rho_lastep, 'g^', x_axis2, error_beta_lastep, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
@@ -276,6 +281,6 @@ label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
 my_results_file4 = 'rela_last_epoch_par1'
 plt.savefig(os.path.join(my_results_path_rela, my_results_file4))
-
+"""
 # Plot the relative error
 
