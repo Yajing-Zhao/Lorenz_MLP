@@ -10,7 +10,7 @@ from torch.autograd import Variable
 my_path = '/home/peiguo/Lorenz_MLP/training_fig'
 my_results_path_rela = '/home/peiguo/Lorenz_MLP/results/rela_error' 
 my_results_path_abso = '/home/peiguo/Lorenz_MLP/results/abso_error' 
-total_samples = 50
+total_samples = 60
 
 def dataset(total_samples):
     def f(state,t):
@@ -247,28 +247,32 @@ print(rela_error_sigma)
 print(rela_error_rho)
 print(rela_error_beta)
 
+plt.figure(1)
 x_axis1 = np.arange(1,EPOCH+1)
 print(x_axis1)
-plt.subplot(x_axis1, error_all, 'r--', x_axis1, error_sigma, 'bs', x_axis1, error_rho, 'g^', x_axis1, error_beta, 'y*')
+plt.plot(x_axis1, error_all, 'r--', x_axis1, error_sigma, 'bs', x_axis1, error_rho, 'g^', x_axis1, error_beta, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
 my_results_file1 = 'all_epoch_par1'
 plt.savefig(os.path.join(my_results_path_abso, my_results_file1))
 
-
+plt.figure(2)
 x_axis3 = np.arange(1,EPOCH+1)
-plt.subplot(x_axis3, rela_error_all, 'r--', x_axis3, rela_error_sigma, 'bs', x_axis3, rela_error_rho, 'g^', x_axis3, rela_error_beta, 'y*')
+plt.plot(x_axis3, rela_error_all, 'r--', x_axis3, rela_error_sigma, 'bs', x_axis3, rela_error_rho, 'g^', x_axis3, rela_error_beta, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
 my_results_file3 = 'rela_all_epoch_par1'
 plt.savefig(os.path.join(my_results_path_rela, my_results_file3))
-"""
+
+plt.figure(3)
 x_axis0 = np.arange(1,total_samples + 1)
 plt.plot(x_axis0, target_rho, 'bs', x_axis0, pred_rho, 'g^')
 label = [ 'target', 'predict']
 plt.legend(label, loc='upper right')
 my_results_file0 = 'rho_last_epoch_par1'
 plt.savefig(os.path.join(my_results_path_abso, my_results_file0))
+
+plt.figure(4)
 x_axis2 = np.arange(1,total_samples + 1)
 plt.plot(x_axis2, error_all_lastep, 'r--', x_axis2, error_sigma_lastep, 'bs', x_axis2, error_rho_lastep, 'g^', x_axis2, error_beta_lastep, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
@@ -276,12 +280,13 @@ plt.legend(label, loc='upper right')
 my_results_file2 = 'last_epoch_par1'
 plt.savefig(os.path.join(my_results_path_abso, my_results_file2))
 
+plt.figure(5)
 x_axis4 = np.arange(1,total_samples + 1)
 plt.plot(x_axis4, rela_error_all_lastep, 'r--', x_axis4, rela_error_sigma_lastep, 'bs', x_axis4, rela_error_rho_lastep, 'g^', x_axis4, rela_error_beta_lastep, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
 my_results_file4 = 'rela_last_epoch_par1'
 plt.savefig(os.path.join(my_results_path_rela, my_results_file4))
-"""
+
 # Plot the relative error
 
