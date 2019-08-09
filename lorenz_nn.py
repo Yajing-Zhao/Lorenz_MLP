@@ -271,7 +271,6 @@ my_results_file2 = 'last_epoch_par1'
 plt.savefig(os.path.join(my_results_path_abso, my_results_file2))
 
 x_axis3 = np.arange(1,EPOCH+1)
-print(x_axis3)
 plt.plot(x_axis3, rela_error_all, 'r--', x_axis3, rela_error_sigma, 'bs', x_axis3, rela_error_rho, 'g^', x_axis3, rela_error_beta, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
