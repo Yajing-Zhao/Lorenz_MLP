@@ -247,14 +247,14 @@ print(rela_error_sigma)
 print(rela_error_rho)
 print(rela_error_beta)
 
-
+"""
 x_axis0 = np.arange(1,total_samples + 1)
 plt.plot(x_axis0, target_rho, 'bs', x_axis0, pred_rho, 'g^')
 label = [ 'target', 'predict']
 plt.legend(label, loc='upper right')
 my_results_file0 = 'rho_last_epoch_par1'
 plt.savefig(os.path.join(my_results_path_abso, my_results_file0))
-
+"""
 x_axis1 = np.arange(1,EPOCH+1)
 print(x_axis1)
 plt.plot(x_axis1, error_all, 'r--', x_axis1, error_sigma, 'bs', x_axis1, error_rho, 'g^', x_axis1, error_beta, 'y*')
