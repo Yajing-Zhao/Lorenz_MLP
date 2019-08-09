@@ -10,7 +10,7 @@ from torch.autograd import Variable
 my_path = '/home/peiguo/Lorenz_MLP/training_fig'
 my_results_path_rela = '/home/peiguo/Lorenz_MLP/results/rela_error' 
 my_results_path_abso = '/home/peiguo/Lorenz_MLP/results/abso_error' 
-total_samples = 20
+total_samples = 5000
 
 def dataset(total_samples):
     def f(state,t):
@@ -109,7 +109,7 @@ loss_fn = MSRELoss().cuda()
 learning_rate = 1e-5
 #learning_rate = 1e-3
 
-EPOCH = 10
+EPOCH = 100
 
 # define the optimizer
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
@@ -135,13 +135,13 @@ rela_error_beta_lastep = []
 
 for t in range(EPOCH):
     #training
-    batch_num = int(np.ceil(total_samples // batch_size))
+    batch_num = int(np.ceil(total_samples / batch_size))
     print(batch_num)
     shuffled = np.arange(total_samples)
     np.random.shuffle(shuffled)
     total_loss = 0
     all_data = 0
-    for i in range(batch_num+1):
+    for i in range(batch_num):
         start = i*batch_size
         end = min(total_samples, (i+1)*batch_size)
         inputs = train_inputs[shuffled[start:end]]
@@ -173,7 +173,7 @@ for t in range(EPOCH):
     target_rho = []
     pred_rho = []
 
-    for i in range(batch_num+1):
+    for i in range(batch_num):
         start = i*batch_size
         end = min(total_samples, (i+1)*batch_size)
         inputs = test_inputs[start:end]
