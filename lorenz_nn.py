@@ -240,6 +240,7 @@ for t in range(EPOCH):
 
 print(error_all)
 print(error_sigma)
+print(error_rho)
 """
 print(rela_error_sigma)
 print(rela_error_rho)
