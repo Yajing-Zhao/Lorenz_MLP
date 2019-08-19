@@ -248,7 +248,7 @@ print(rela_error_rho)
 print(rela_error_beta)
 
 #Plot the results of all epochs
-fig1, (ax1, ax2) = plt.subplots(1,2)
+fig1, (ax1, ax2) = plt.subplots(1,2, sharex=True, sharey = True, figsize=(8, 15))
 epochs = np.arange(1, EPOCH+1)
 
 ax1.plot(epochs, error_all, 'g^', label = 'all')
@@ -272,7 +272,7 @@ ax2.set_xlabel('epoch')
 ax2.set_ylabel('relative error')
 
 #Plot the absolute errors of last epoch
-fig2, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2)
+fig2, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, sharex=True, sharey=True, figsize=(8, 15))
 
 samples = np.arange(1, total_samples+1)
 
