@@ -94,16 +94,16 @@ class MSRELoss(nn.Module):
     def __init__(self):
         super().__init__()
         self.eps = 1e-7
-        self.weight = torch.Tensor([1/2,1,1/2]).cuda()
+        self.weight = torch.Tensor([1,1/2,1]).cuda()
     def forward(self, input, target, size_average=True):
         return torch.mean(self.weight[None,:] * (input - target)**2) if size_average else torch.sum(self.weight[None,:] * (input - target)**2)
 # define the model
 model = MLP().cuda()
 # difine the loss function
 # using MSELOSS: 
-#loss_fn = nn.MSELoss(reduction='sum').cuda()
+loss_fn = nn.MSELoss(reduction='sum').cuda()
 # using mean squared relative error loss function(MSRELoss)
-loss_fn = MSRELoss().cuda()
+#loss_fn = MSRELoss().cuda()
 
 # define the hyperparameters
 learning_rate = 1e-5
@@ -253,7 +253,7 @@ print(x_axis1)
 plt.plot(x_axis1, error_all, 'r--', x_axis1, error_sigma, 'bs', x_axis1, error_rho, 'g^', x_axis1, error_beta, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file1 = 'all_epoch_par1'
+my_results_file1 = 'all_epoch_par0'
 plt.savefig(os.path.join(my_results_path_abso, my_results_file1))
 
 plt.figure(2)
@@ -261,7 +261,7 @@ x_axis3 = np.arange(1,EPOCH+1)
 plt.plot(x_axis3, rela_error_all, 'r--', x_axis3, rela_error_sigma, 'bs', x_axis3, rela_error_rho, 'g^', x_axis3, rela_error_beta, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file3 = 'rela_all_epoch_par1'
+my_results_file3 = 'rela_all_epoch_par0'
 plt.savefig(os.path.join(my_results_path_rela, my_results_file3))
 
 plt.figure(3)
@@ -269,7 +269,7 @@ x_axis0 = np.arange(1,total_samples + 1)
 plt.plot(x_axis0, target_rho, 'bs', x_axis0, pred_rho, 'g^')
 label = [ 'target', 'predict']
 plt.legend(label, loc='upper right')
-my_results_file0 = 'rho_last_epoch_par1'
+my_results_file0 = 'rho_last_epoch_par0'
 plt.savefig(os.path.join(my_results_path_abso, my_results_file0))
 
 plt.figure(4)
@@ -277,7 +277,7 @@ x_axis2 = np.arange(1,total_samples + 1)
 plt.plot(x_axis2, error_all_lastep, 'r--', x_axis2, error_sigma_lastep, 'bs', x_axis2, error_rho_lastep, 'g^', x_axis2, error_beta_lastep, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file2 = 'last_epoch_par1'
+my_results_file2 = 'last_epoch_par0'
 plt.savefig(os.path.join(my_results_path_abso, my_results_file2))
 
 plt.figure(5)
@@ -285,7 +285,7 @@ x_axis4 = np.arange(1,total_samples + 1)
 plt.plot(x_axis4, rela_error_all_lastep, 'r--', x_axis4, rela_error_sigma_lastep, 'bs', x_axis4, rela_error_rho_lastep, 'g^', x_axis4, rela_error_beta_lastep, 'y*')
 label = ['all', 'sigma', 'rho', 'beta']
 plt.legend(label, loc='upper right')
-my_results_file4 = 'rela_last_epoch_par1'
+my_results_file4 = 'rela_last_epoch_par0'
 plt.savefig(os.path.join(my_results_path_rela, my_results_file4))
 
 # Plot the relative error
