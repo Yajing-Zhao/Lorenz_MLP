@@ -271,7 +271,39 @@ ax2.set_title('error of each epoch')
 ax2.set_xlabel('epoch')
 ax2.set_ylabel('relative error')
 
+#Plot the absolute errors of last epoch
+fig2, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2)
+
+samples = np.arange(1, total_samples+1)
+
+ax1.plot(samples, error_all_lastep, 'g^', label = 'all')
+ax2.plot(samples, error_sigma_lastep, 'bs', label = 'sigma')
+ax3.plot(samples, error_rho_lastep, 'r--', label = 'rho')
+ax4.plot(samples, error_beta_lastep, 'y*', label = 'beta')
+
+ax1.legend()
+ax1.set_title('absolute error of all')
+ax1.set_xlabel('samples')
+ax1.set_ylabel('absolute error')
+
+ax2.legend()
+ax2.set_title('absolute error of sigma')
+ax2.set_xlabel('samples')
+ax2.set_ylabel('absolute error')
+
+ax3.legend()
+ax3.set_title('absolute error of rho')
+ax3.set_xlabel('samples')
+ax3.set_ylabel('absolute error')
+
+ax4.legend()
+ax4.set_title('absolute error of beta')
+ax4.set_xlabel('samples')
+ax4.set_ylabel('absolute error')
+
+
 fig1.savefig(os.path.join(my_results_path_epoch100, 'all_epochs'))
+fig2.savefig(os.path.join(my_results_path_epoch100, 'last_epochs_abo'))
 
 """
 plt.figure(1)
