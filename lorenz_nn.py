@@ -248,7 +248,8 @@ print(rela_error_rho)
 print(rela_error_beta)
 
 #Plot the results of all epochs
-fig1, (ax1, ax2) = plt.subplots(1,2, sharex=True, sharey = True, figsize=(8, 15))
+fig1, (ax1, ax2) = plt.subplots(1,2, sharex=True, sharey = True, figsize=(15, 8))
+fig1.suptitle(' Error of Each Epoch')
 epochs = np.arange(1, EPOCH+1)
 
 ax1.plot(epochs, error_all, 'g^', label = 'all')
@@ -272,7 +273,8 @@ ax2.set_xlabel('epoch')
 ax2.set_ylabel('relative error')
 
 #Plot the absolute errors of last epoch
-fig2, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, sharex=True, sharey=True, figsize=(8, 15))
+fig2, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, sharex=True, sharey=True, figsize=(15, 8))
+fig2.suptitle('Absolute Error of Each Sample in The Lase Epoch')
 
 samples = np.arange(1, total_samples+1)
 
@@ -302,8 +304,40 @@ ax4.set_xlabel('samples')
 ax4.set_ylabel('absolute error')
 
 
+#Plot the relative errors of last epoch
+fig3, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, sharex=True, sharey=True, figsize=(15, 8))
+fig3.suptitle('Relative Error of Each Sample in The Lase Epoch')
+samples = np.arange(1, total_samples+1)
+
+ax1.plot(samples, rela_error_all_lastep, 'g^', label = 'all')
+ax2.plot(samples, rela_error_sigma_lastep, 'bs', label = 'sigma')
+ax3.plot(samples, rela_error_rho_lastep, 'r--', label = 'rho')
+ax4.plot(samples, rela_error_beta_lastep, 'y*', label = 'beta')
+
+ax1.legend()
+ax1.set_title('relative error of all')
+ax1.set_xlabel('samples')
+ax1.set_ylabel('relative error')
+
+ax2.legend()
+ax2.set_title('relative error of sigma')
+ax2.set_xlabel('samples')
+ax2.set_ylabel('relative error')
+
+ax3.legend()
+ax3.set_title('relative error of rho')
+ax3.set_xlabel('samples')
+ax3.set_ylabel('relative error')
+
+ax4.legend()
+ax4.set_title('relative error of beta')
+ax4.set_xlabel('samples')
+ax4.set_ylabel('relative error')
+
+
 fig1.savefig(os.path.join(my_results_path_epoch100, 'all_epochs'))
 fig2.savefig(os.path.join(my_results_path_epoch100, 'last_epochs_abo'))
+fig3.savefig(os.path.join(my_results_path_epoch100, 'last_epochs_rela'))
 
 """
 plt.figure(1)
