@@ -101,9 +101,9 @@ class MSRELoss(nn.Module):
 model = MLP().cuda()
 # difine the loss function
 # using MSELOSS: 
-loss_fn = nn.MSELoss(reduction='sum').cuda()
+#loss_fn = nn.MSELoss(reduction='sum').cuda()
 # using mean squared relative error loss function(MSRELoss)
-#loss_fn = MSRELoss().cuda()
+loss_fn = MSRELoss().cuda()
 
 # define the hyperparameters
 learning_rate = 1e-5
@@ -136,7 +136,6 @@ rela_error_beta_lastep = []
 for t in range(EPOCH):
     #training
     batch_num = int(np.ceil(total_samples / batch_size))
-    print(batch_num)
     shuffled = np.arange(total_samples)
     np.random.shuffle(shuffled)
     total_loss = 0
@@ -237,18 +236,8 @@ for t in range(EPOCH):
     rela_error_rho.append(mean_rela_error_rho)
     rela_error_beta.append(mean_rela_error_beta)
 
-
-print(error_all)
-print(error_sigma)
-print(error_rho)
-print(error_beta)
-print(rela_error_all)
-print(rela_error_sigma)
-print(rela_error_rho)
-print(rela_error_beta)
-
 #Plot the results of all epochs
-fig1, (ax1, ax2) = plt.subplots(1,2, sharex=True, sharey = True, figsize=(15, 8))
+fig1, (ax1, ax2) = plt.subplots(1,2, sharex=True, figsize=(15, 8))
 fig1.suptitle(' Error of Each Epoch')
 epochs = np.arange(1, EPOCH+1)
 
@@ -273,7 +262,7 @@ ax2.set_xlabel('epoch')
 ax2.set_ylabel('relative error')
 
 #Plot the absolute errors of last epoch
-fig2, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, sharex=True, sharey=True, figsize=(15, 8))
+fig2, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, sharex=True, figsize=(15, 8))
 fig2.suptitle('Absolute Error of Each Sample in The Lase Epoch')
 
 samples = np.arange(1, total_samples+1)
@@ -305,7 +294,7 @@ ax4.set_ylabel('absolute error')
 
 
 #Plot the relative errors of last epoch
-fig3, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, sharex=True, sharey=True, figsize=(15, 8))
+fig3, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, sharex=True, figsize=(15, 8))
 fig3.suptitle('Relative Error of Each Sample in The Lase Epoch')
 samples = np.arange(1, total_samples+1)
 
@@ -335,9 +324,9 @@ ax4.set_xlabel('samples')
 ax4.set_ylabel('relative error')
 
 
-fig1.savefig(os.path.join(my_results_path_epoch100, 'all_par0'))
-fig2.savefig(os.path.join(my_results_path_epoch100, 'last_abo_par0'))
-fig3.savefig(os.path.join(my_results_path_epoch100, 'last__rela_par0'))
+fig1.savefig(os.path.join(my_results_path_epoch100, 'all_par2'))
+fig2.savefig(os.path.join(my_results_path_epoch100, 'last_abo_par2'))
+fig3.savefig(os.path.join(my_results_path_epoch100, 'last__rela_par2'))
 
 """
 plt.figure(1)
