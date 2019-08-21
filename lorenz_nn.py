@@ -8,9 +8,9 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 my_path = '/home/peiguo/Lorenz_MLP/training_fig'
-my_results_path_epoch100 = '/home/peiguo/Lorenz_MLP/results/epoch100' 
-my_results_path_epoch200 = '/home/peiguo/Lorenz_MLP/results/epoch200' 
-total_samples = 500
+my_results_path_epoch100 = '/mv_users/peiguo/garage/pytorch/Lorenz_MLP/results/epoch100' 
+my_results_path_epoch200 = '/mv_users/peiguo/garage/pytorch/Lorenz_MLP/results/epoch200' 
+total_samples = 5000
 
 def dataset(total_samples):
     def f(state,t):
@@ -109,7 +109,7 @@ loss_fn = nn.MSELoss(reduction='sum').cuda()
 learning_rate = 1e-5
 #learning_rate = 1e-3
 
-EPOCH = 20
+EPOCH = 100
 
 # define the optimizer
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
@@ -335,9 +335,9 @@ ax4.set_xlabel('samples')
 ax4.set_ylabel('relative error')
 
 
-fig1.savefig(os.path.join(my_results_path_epoch100, 'all_epochs'))
-fig2.savefig(os.path.join(my_results_path_epoch100, 'last_epochs_abo'))
-fig3.savefig(os.path.join(my_results_path_epoch100, 'last_epochs_rela'))
+fig1.savefig(os.path.join(my_results_path_epoch100, 'all_par0'))
+fig2.savefig(os.path.join(my_results_path_epoch100, 'last_abo_par0'))
+fig3.savefig(os.path.join(my_results_path_epoch100, 'last__rela_par0'))
 
 """
 plt.figure(1)
