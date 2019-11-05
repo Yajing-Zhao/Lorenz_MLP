@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 plt.switch_backend('agg')
@@ -8,70 +9,23 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 my_path = '/home/peiguo/Lorenz_MLP/training_fig'
-my_results_path_epoch100 = '/mv_users/peiguo/garage/pytorch/Lorenz_MLP/results/epoch100' 
-my_results_path_epoch200 = '/mv_users/peiguo/garage/pytorch/Lorenz_MLP/results/epoch200' 
+my_results_path_epoch100 = '/home/peiguo/Lorenz_MLP/results/epoch100' 
+my_results_path_epoch200 = '/home/peiguo/Lorenz_MLP/results/epoch200' 
 total_samples = 5000
 
-def dataset(total_samples):
-    def f(state,t):
-        x, y, z = state
-        sigma, rho, beta = para
-        return sigma * (y-x), x*(rho-z)-y, x*y-beta*z
+with open('train_inputs.pickle', 'rb') as f:
+    train_inputs = pickle.load(f)
+with open('train_targets.pickle', 'rb') as f:
+    train_targets = pickle.load(f)
+train_inputs = Variable(torch.from_numpy(train_inputs).float()).view(total_samples, -1).cuda()
+train_targets = Variable(torch.from_numpy(train_targets).float()).view(total_samples, -1).cuda()
 
-    data = []
-    targets = []
-    for i in range(total_samples):
-        para = [np.random.uniform(0,20), np.random.uniform(10,30), np.random.uniform(0,10)]
-        t_seq = np.arange(0, 40, 0.01)
-        state0 = [1.0, 1.0, 1.0]
-        states = odeint(f, state0, t_seq)
-        """
-        fig1 = plt.figure()
-        ax =fig1.gca(projection = '3d')
-        ax.plot(states[:,0], states[:,1], states[:,2])
-        my_file = 'training'+str(i)
-        plt.savefig(os.path.join(my_path, my_file))
-        """
-     #   print(states.shape())
-        data.append(states)
-        targets.append(para)
-
-    data = Variable(torch.from_numpy(np.array(data)).float()).view(total_samples, -1)
-    targets = Variable(torch.from_numpy(np.array(targets)).float()).view(total_samples, -1)
-
-    return data.cuda(), targets.cuda()
-
-def test_dataset(total_samples):
-    def f(state,t):
-        x, y, z = state
-        sigma, rho, beta = para
-        return sigma * (y-x), x*(rho-z)-y, x*y-beta*z
-
-    data = []
-    targets = []
-    for i in range(total_samples):
-        para = [np.random.uniform(0,20), np.random.uniform(10,30), np.random.uniform(0,10)]
-        t_seq = np.arange(0, 40, 0.01)
-        state0 = [1.0, 1.0, 1.0]
-        states = odeint(f, state0, t_seq)
-        """
-        fig1 = plt.figure()
-        ax =fig1.gca(projection = '3d')
-        ax.plot(states[:,0], states[:,1], states[:,2])
-        my_file = 'training'+str(i)
-        plt.savefig(os.path.join(my_path, my_file))
-        """
-     #   print(states.shape())
-        data.append(states)
-        targets.append(para)
-
-    data = Variable(torch.from_numpy(np.array(data)).float()).view(total_samples, -1)
-    targets = Variable(torch.from_numpy(np.array(targets)).float()).view(total_samples, -1)
-
-    return data.cuda(), targets.cuda()
-
-train_inputs, train_targets = dataset(total_samples)
-test_inputs, test_targets = test_dataset(total_samples)
+with open('test_inputs.pickle', 'rb') as f:
+    test_inputs = pickle.load(f)
+with open('test_targets.pickle', 'rb') as f:
+    test_targets = pickle.load(f)
+test_inputs = Variable(torch.from_numpy(test_inputs).float()).view(total_samples, -1).cuda()
+test_targets = Variable(torch.from_numpy(test_targets).float()).view(total_samples, -1).cuda()
 batch_size = 8
 
 # define the neural network
@@ -132,6 +86,7 @@ rela_error_sigma_lastep = []
 rela_error_rho_lastep = []
 rela_error_beta_lastep = []
 
+predictions_lastep = []
 
 for t in range(EPOCH):
     #training
@@ -196,6 +151,8 @@ for t in range(EPOCH):
         if t == EPOCH - 1:
             target_rho.extend(targets[:,1])
             pred_rho.extend(preds[:,1])
+
+            predictions_lastep.extend(preds.tolist())
             error_sigma_lastep.extend(error[:,0].tolist())
             error_rho_lastep.extend(error[:,1].tolist())
             error_beta_lastep.extend(error[:,2].tolist())
@@ -225,7 +182,6 @@ for t in range(EPOCH):
     error_sigma.append(mean_error_sigma)
     error_rho.append(mean_error_rho)
     error_beta.append(mean_error_beta)
-    print(mean_error_sigma)
     #visualize the result relative error:
     mean_rela_error_sigma = total_rela_error_sigma / total_samples
     mean_rela_error_rho = total_rela_error_rho / total_samples
@@ -236,6 +192,33 @@ for t in range(EPOCH):
     rela_error_rho.append(mean_rela_error_rho)
     rela_error_beta.append(mean_rela_error_beta)
 
+<<<<<<< HEAD
+"""
+print(error_all)
+print(error_sigma)
+print(error_rho)
+print(error_beta)
+print(rela_error_all)
+print(rela_error_sigma)
+print(rela_error_rho)
+print(rela_error_beta)
+"""
+
+def f(state,t):
+    x, y, z = state
+    sigma, rho, beta = para
+    return sigma * (y-x), x*(rho-z)-y, x*y-beta*z
+predic_solu_lastep = []
+for i in range(len(predictions_lastep)):
+    para = predictions_lastep[i]
+    t_seq = np.arange(0, 40, 0.01)
+    state0 = [1.0, 1.0, 1.0]
+    states = odeint(f, state0, t_seq)
+    predic_solu_lastep.append(states)
+with open('pred_solu_mlp.pickle', 'wb') as f:
+    pickle.dump(predic_solu_lastep, f)
+=======
+>>>>>>> 62c324bf220c742e40a4147a7e314f54f024b0ef
 #Plot the results of all epochs
 fig1, (ax1, ax2) = plt.subplots(1,2, sharex=True, figsize=(15, 8))
 fig1.suptitle(' Error of Each Epoch')
@@ -324,9 +307,15 @@ ax4.set_xlabel('samples')
 ax4.set_ylabel('relative error')
 
 
+<<<<<<< HEAD
+fig1.savefig(os.path.join(my_results_path_epoch100, 'all_epochs_mse'))
+fig2.savefig(os.path.join(my_results_path_epoch100, 'last_epochs_abo_mse'))
+fig3.savefig(os.path.join(my_results_path_epoch100, 'last_epochs_rela_mse'))
+=======
 fig1.savefig(os.path.join(my_results_path_epoch100, 'all_par2'))
 fig2.savefig(os.path.join(my_results_path_epoch100, 'last_abo_par2'))
 fig3.savefig(os.path.join(my_results_path_epoch100, 'last__rela_par2'))
+>>>>>>> 62c324bf220c742e40a4147a7e314f54f024b0ef
 
 """
 plt.figure(1)
