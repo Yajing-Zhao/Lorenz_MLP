@@ -8,21 +8,21 @@ import os
 import torch 
 import torch.nn as nn
 from torch.autograd import Variable
-my_path = '/home/peiguo/Lorenz_MLP/training_fig'
-my_results_path_epoch100 = '/home/peiguo/Lorenz_MLP/results/epoch100' 
-my_results_path_epoch200 = '/home/peiguo/Lorenz_MLP/results/epoch200' 
+my_path = '/home/peiguo/lorenz-cur/training_fig'
+my_results_path_epoch100 = '/home/peiguo/lorenz-cur/results/epoch100' 
+my_results_path_epoch200 = '/home/peiguo/lorenz-cur/results/epoch200' 
 total_samples = 5000
 
-with open('train_inputs.pickle', 'rb') as f:
+with open('pickle/train_inputs.pickle', 'rb') as f:
     train_inputs = pickle.load(f)
-with open('train_targets.pickle', 'rb') as f:
+with open('pickle/train_targets.pickle', 'rb') as f:
     train_targets = pickle.load(f)
 train_inputs = Variable(torch.from_numpy(train_inputs).float()).view(total_samples, -1).cuda()
 train_targets = Variable(torch.from_numpy(train_targets).float()).view(total_samples, -1).cuda()
 
-with open('test_inputs.pickle', 'rb') as f:
+with open('pickle/test_inputs.pickle', 'rb') as f:
     test_inputs = pickle.load(f)
-with open('test_targets.pickle', 'rb') as f:
+with open('pickle/test_targets.pickle', 'rb') as f:
     test_targets = pickle.load(f)
 test_inputs = Variable(torch.from_numpy(test_inputs).float()).view(total_samples, -1).cuda()
 test_targets = Variable(torch.from_numpy(test_targets).float()).view(total_samples, -1).cuda()
@@ -192,7 +192,6 @@ for t in range(EPOCH):
     rela_error_rho.append(mean_rela_error_rho)
     rela_error_beta.append(mean_rela_error_beta)
 
-<<<<<<< HEAD
 """
 print(error_all)
 print(error_sigma)
@@ -215,10 +214,8 @@ for i in range(len(predictions_lastep)):
     state0 = [1.0, 1.0, 1.0]
     states = odeint(f, state0, t_seq)
     predic_solu_lastep.append(states)
-with open('pred_solu_mlp.pickle', 'wb') as f:
+with open('pickle/pred_solu_mlp.pickle', 'wb') as f:
     pickle.dump(predic_solu_lastep, f)
-=======
->>>>>>> 62c324bf220c742e40a4147a7e314f54f024b0ef
 #Plot the results of all epochs
 fig1, (ax1, ax2) = plt.subplots(1,2, sharex=True, figsize=(15, 8))
 fig1.suptitle(' Error of Each Epoch')
@@ -307,15 +304,9 @@ ax4.set_xlabel('samples')
 ax4.set_ylabel('relative error')
 
 
-<<<<<<< HEAD
 fig1.savefig(os.path.join(my_results_path_epoch100, 'all_epochs_mse'))
 fig2.savefig(os.path.join(my_results_path_epoch100, 'last_epochs_abo_mse'))
 fig3.savefig(os.path.join(my_results_path_epoch100, 'last_epochs_rela_mse'))
-=======
-fig1.savefig(os.path.join(my_results_path_epoch100, 'all_par2'))
-fig2.savefig(os.path.join(my_results_path_epoch100, 'last_abo_par2'))
-fig3.savefig(os.path.join(my_results_path_epoch100, 'last__rela_par2'))
->>>>>>> 62c324bf220c742e40a4147a7e314f54f024b0ef
 
 """
 plt.figure(1)
