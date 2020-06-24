@@ -1,2 +1,2 @@
 # Lorenz_MLP
-Using MPL to predict the parameters of Lorenz system
+Using MLP to predict the parameters of Lorenz system
